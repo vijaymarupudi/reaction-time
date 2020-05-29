@@ -1,0 +1,17 @@
+{
+  "name": "reaction-time",
+  "version": "0.0.1",
+  "description": "Hello people interested in jsPsych,",
+  "main": "src/reaction-time.ts",
+  "dependencies": {
+    "rollup": "^2.11.2",
+    "typescript": "^3.9.3",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
