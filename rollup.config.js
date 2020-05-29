@@ -1,13 +1,37 @@
-import typescript from "@rollup/plugin-typescript"
+import typescript from "@rollup/plugin-typescript";
 
-export default {
+const common = {
   input: "./src/reaction-time.ts",
-  output: {
-    format: "umd",
-    name: "ReactionTime",
-    file: './dist/reaction-time.js'
+  plugins: [typescript()]
+};
+
+const buildProducts = [
+  {
+    ...common,
+    // umd
+    output: {
+      format: "umd",
+      name: "ReactionTime",
+      file: "./dist/reaction-time.js"
+    }
   },
-  plugins: [
-    typescript()
-  ]
-}
+  {
+    ...common,
+    // es
+    output: {
+      format: "es",
+      file: "./dist/reaction-time.mjs"
+    }
+  }
+];
+
+buildProducts.push({
+  input: "./src/test.ts",
+  plugins: [typescript()],
+  output: {
+    file: "dist/test.js",
+    format: "es"
+  }
+})
+
+export default buildProducts
