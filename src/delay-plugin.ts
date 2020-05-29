@@ -1,4 +1,4 @@
-import { IPlugin } from 'types'
+import { IPlugin } from './types'
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

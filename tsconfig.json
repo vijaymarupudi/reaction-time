@@ -2,8 +2,5 @@
   "compilerOptions": {
     "target": "es2019"
 
-  },
-  "files": [
-    "reaction-time.ts"
-  ]
+  }
 }

@@ -20,7 +20,7 @@ class Stopwatch {
 
 type TimelineGenerator = { (reactionTime: ReactionTime): Iterable<ITrial> };
 
-class ReactionTime {
+export class ReactionTime {
   private _data: Array<Object>;
   constructor() {
     this._data = [];
