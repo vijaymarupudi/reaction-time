@@ -8,7 +8,7 @@ export default [
     input: "src/reaction-time.ts",
     plugins: [typescript()],
     output: {
-      file: "dist/reaction-time.development.js",
+      file: "dist/reaction-time.esm.js",
       format: "esm",
       name: "ReactionTime"
     }
@@ -35,7 +35,7 @@ export default [
       commonjs()
     ],
     output: {
-      file: "dist/reaction-time.production.js",
+      file: "dist/reaction-time.umd.js",
       format: "umd",
       name: "ReactionTime",
       plugins: [terser({ compress: true, mangle: true })]
