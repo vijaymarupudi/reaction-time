@@ -1,8 +1,9 @@
+export type ITrialData = Object;
+
 export interface ITrial {
-  (screen: HTMLElement): Promise<Object>;
+  (screen: HTMLElement): Promise<ITrialData>;
 }
 
 export interface IPlugin {
   (config: any): ITrial;
 }
-

@@ -3,6 +3,8 @@ Hello people interested in jsPsych,
 Written in Typescript for easier long term maintenance and useful editor hints
 in editors like Atom, VSCode, and Vim.
 
+Uses React for most components, with Hooks for composability.
+
 Minimal library with independent utilities
 
   * No timeline variables

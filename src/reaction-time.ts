@@ -1,30 +1,5 @@
-import { ITrial } from "./types";
-
-function dateToISO8601(date: Date) {
-  var tzo = -date.getTimezoneOffset(),
-    dif = tzo >= 0 ? "+" : "-",
-    pad = function(num: number) {
-      var norm = Math.floor(Math.abs(num));
-      return (norm < 10 ? "0" : "") + norm;
-    };
-  return (
-    date.getFullYear() +
-    "-" +
-    pad(date.getMonth() + 1) +
-    "-" +
-    pad(date.getDate()) +
-    "T" +
-    pad(date.getHours()) +
-    ":" +
-    pad(date.getMinutes()) +
-    ":" +
-    pad(date.getSeconds()) +
-    dif +
-    pad(tzo / 60) +
-    ":" +
-    pad(tzo % 60)
-  );
-}
+import { ITrial, ITrialData } from "./types";
+import { dateToISO8601 } from './utils'
 
 class Stopwatch {
   private _startDateTime: Date;
@@ -48,12 +23,12 @@ class Stopwatch {
 type TimelineGenerator = { (reactionTime: ReactionTime): Iterable<ITrial> };
 
 export class ReactionTime {
-  private _data: Array<Object>;
+  private _data: Array<ITrialData>;
   constructor() {
     this._data = [];
   }
 
-  push(item: Object) {
+  push(item: ITrialData) {
     this._data.push(item);
   }
 
