@@ -3,7 +3,9 @@ import * as React from "react";
 import { IReactPluginComponent } from "./plugin-types";
 import { IPlugin } from "./types";
 
-export function makeReactPlugin<T>(Component: IReactPluginComponent<T>): IPlugin {
+export function makeReactPlugin<T>(
+  Component: IReactPluginComponent<T>
+): IPlugin {
   return function(config: T) {
     return function(screen: HTMLElement) {
       return new Promise(resolve => {

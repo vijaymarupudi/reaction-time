@@ -1,5 +1,7 @@
-import { ITrial, ITrialData } from "./types";
-import { dateToISO8601 } from './utils'
+import ReactionTime from './ReactionTime'
+import { dateToISO8601 } from "./utils";
+import { ITrial } from "./types";
+import { jsPsychPlugin } from './jspsych-plugin'
 
 class Stopwatch {
   private _startDateTime: Date;
@@ -22,46 +24,31 @@ class Stopwatch {
 
 type TimelineGenerator = { (reactionTime: ReactionTime): Iterable<ITrial> };
 
-export class ReactionTime {
-  private _data: Array<ITrialData>;
-  constructor() {
-    this._data = [];
-  }
-
-  push(item: ITrialData) {
-    this._data.push(item);
-  }
-
-  data() {
-    return this._data;
-  }
-
-  static async init(timelineGenerator: TimelineGenerator) {
-    const reactionTime = new ReactionTime();
-    const screen = document.createElement("div");
-    document.body.appendChild(screen);
-    const timeline = timelineGenerator(reactionTime)[Symbol.iterator]();
-    let previousTrialData: any;
-    const stopwatch = new Stopwatch();
-    let trialIndex = 0;
-    while (true) {
-      const { value: trial, done } = timeline.next(previousTrialData);
-      stopwatch.start();
-      const pluginTrialData = await trial(screen);
-      const finalTrialData = {
-        ...stopwatch.stop(),
-        trialIndex,
-        ...pluginTrialData
-      };
-      reactionTime.push(finalTrialData);
-      trialIndex++;
-      if (done) {
-        break;
-      }
-      // wrapping up for next iteration
-      previousTrialData = finalTrialData;
+export async function init(timelineGenerator: TimelineGenerator) {
+  const screen = document.createElement("div");
+  document.body.appendChild(screen);
+  const reactionTime = new ReactionTime(screen);
+  const timeline = timelineGenerator(reactionTime)[Symbol.iterator]();
+  let previousTrialData: any;
+  const stopwatch = new Stopwatch();
+  let trialIndex = 0;
+  while (true) {
+    const { value: trial, done } = timeline.next(previousTrialData);
+    if (done) {
+      break;
     }
-
-    document.body.innerText = JSON.stringify(reactionTime.data());
+    stopwatch.start();
+    const pluginTrialData = await trial(screen);
+    const finalTrialData = {
+      ...stopwatch.stop(),
+      trialIndex,
+      ...pluginTrialData
+    };
+    reactionTime.push(finalTrialData);
+    trialIndex++;
+    // wrapping up for next iteration
+    previousTrialData = finalTrialData;
   }
 }
+
+export { jsPsychPlugin }
