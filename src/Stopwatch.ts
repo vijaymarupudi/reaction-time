@@ -1,4 +1,4 @@
-export function dateToISO8601(date: Date) {
+function dateToISO8601(date: Date) {
   var tzo = -date.getTimezoneOffset(),
     dif = tzo >= 0 ? "+" : "-",
     pad = function(num: number) {
@@ -24,3 +24,21 @@ export function dateToISO8601(date: Date) {
   );
 }
 
+export class Stopwatch {
+  private _startDateTime: Date;
+  private _startTimeStamp: number;
+
+  start() {
+    this._startTimeStamp = performance.now();
+    this._startDateTime = new Date(Date.now());
+  }
+
+  stop() {
+    const trialDuration = performance.now() - this._startTimeStamp;
+    return {
+      trialDuration,
+      trialStartDateTime: dateToISO8601(this._startDateTime),
+      trialStopDateTime: dateToISO8601(new Date(Date.now()))
+    };
+  }
+}

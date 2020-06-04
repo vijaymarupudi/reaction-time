@@ -1,26 +1,7 @@
-import ReactionTime from './ReactionTime'
-import { dateToISO8601 } from "./utils";
+import ReactionTime from "./ReactionTime";
 import { ITrial } from "./types";
-import { jsPsychPlugin } from './jspsych-plugin'
-
-class Stopwatch {
-  private _startDateTime: Date;
-  private _startTimeStamp: number;
-
-  start() {
-    this._startTimeStamp = performance.now();
-    this._startDateTime = new Date(Date.now());
-  }
-
-  stop() {
-    const trialDuration = performance.now() - this._startTimeStamp;
-    return {
-      trialDuration,
-      trialStartDateTime: dateToISO8601(this._startDateTime),
-      trialStopDateTime: dateToISO8601(new Date(Date.now()))
-    };
-  }
-}
+import { jsPsychPlugin } from "./jspsych-plugin";
+import { Stopwatch } from "./Stopwatch";
 
 type TimelineGenerator = { (reactionTime: ReactionTime): Iterable<ITrial> };
 
@@ -51,4 +32,4 @@ export async function init(timelineGenerator: TimelineGenerator) {
   }
 }
 
-export { jsPsychPlugin }
+export { jsPsychPlugin };
