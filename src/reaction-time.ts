@@ -19,16 +19,25 @@ function displayData(data: Object, screen: HTMLElement): void {
 
 export async function init(timelineGenerator: ITimelineGenerator) {
 
+  // if body, take over the page
   const targetElement = document.body;
-
-  const screenContainer = document.createElement("div");
   if (targetElement === document.body) {
-    document.body.style.margin = "0px"
-    screenContainer.style.width = '100%'
-    screenContainer.style.height = '100%'
+    targetElement.style.margin = "0px"
+    targetElement.style.width = '100vw'
+    targetElement.style.height = '100vh'
   }
-  targetElement.appendChild(screenContainer);
 
+  // screenContainer takes the dimensions of the targetElement
+  const screenContainer = document.createElement('div')
+  targetElement.appendChild(screenContainer);
+  screenContainer.style.width = '100%'
+  screenContainer.style.height = '100%'
+  screenContainer.style.display = 'flex';
+  screenContainer.style.alignItems = 'center';
+  screenContainer.style.justifyContent = 'center';
+
+  
+  // screen is centered within the screen container.
   const screen = document.createElement('div')
   screenContainer.appendChild(screen)
 
@@ -43,6 +52,7 @@ export async function init(timelineGenerator: ITimelineGenerator) {
       break;
     }
 
+    screen.innerHTML = ''
     stopwatch.start();
     const pluginTrialData = await trial(screen);
     const finalTrialData: ITrialFinalOutput = {
