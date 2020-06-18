@@ -1,6 +1,5 @@
 import * as React from "react";
-import { makeReactPlugin } from './plugin-utils'
-import { IReactPluginComponent } from './plugin-types'
+import { makeReactPlugin } from './react-plugin-utils'
 
 // const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 //
@@ -9,15 +8,14 @@ interface IDelayPluginConfig {
   wait: number;
 }
 
-const Page: IReactPluginComponent<IDelayPluginConfig> = ({ config, finishTrial }) => {
+export const delayPlugin = makeReactPlugin<IDelayPluginConfig>("delayPlugin", ({ config, finishTrial }) => {
   return (
     <p onClick={() => finishTrial({ state: "hello" })}>
       Hello world {JSON.stringify(config)}
     </p>
   );
-}
+});
 
-export const delayPlugin = makeReactPlugin(Page);
 
 // export const delayPlugin: IPlugin = (config: IDelayPluginConfig) => {
 //   return function(screen: HTMLElement) {

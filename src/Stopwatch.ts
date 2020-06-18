@@ -24,6 +24,13 @@ function dateToISO8601(date: Date) {
   );
 }
 
+
+export interface IStopwatchOutput {
+  trialDuration: number,
+  trialStartDateTime: string,
+  trialStopDateTime: string
+}
+
 export class Stopwatch {
   private _startDateTime: Date;
   private _startTimeStamp: number;
@@ -33,7 +40,7 @@ export class Stopwatch {
     this._startDateTime = new Date(Date.now());
   }
 
-  stop() {
+  stop(): IStopwatchOutput {
     const trialDuration = performance.now() - this._startTimeStamp;
     return {
       trialDuration,

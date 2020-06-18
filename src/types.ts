@@ -1,4 +1,8 @@
-export type ITrialData = Object;
+export type ITrialData = {
+  input: Object,
+  output: Object
+};
+
 
 export interface ITrial {
   (screen: HTMLElement): Promise<ITrialData>;

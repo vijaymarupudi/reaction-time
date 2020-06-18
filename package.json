@@ -24,7 +24,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production npx rollup -c"
+    "build": "NODE_ENV=production npx rollup -c",
+    "dev": "NODE_ENV=development npx rollup -c --watch"
   },
   "license": "LGPL-3.0-or-later"
 }

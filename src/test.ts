@@ -1,7 +1,7 @@
-import ReactionTime from "./ReactionTime";
-import { init, jsPsychPlugin } from "./reaction-time"
+import { init } from "./reaction-time"
+import { jsPsychPlugin } from './jspsych-plugin'
 
-function* timelineGenerator(reactionTime: ReactionTime) {
+init(function* () {
   while (true) {
     const result = yield jsPsychPlugin({
       type: "html-button-response",
@@ -10,13 +10,10 @@ function* timelineGenerator(reactionTime: ReactionTime) {
     });
 
     console.log(result); // data for that specific trial
-    console.log(Date.now()); // timestamp for the moment the trial is over
-
-    if (result.rt < 500) {
+    console.log(performance.now())
+    if (result.output.rt < 500) {
       break;
     }
   }
-  reactionTime.displayData();
 }
-
-init(timelineGenerator);
+);
