@@ -1,7 +1,3 @@
-// import "../jsPsych/jspsych";
-// import "../jsPsych/plugins/jspsych-html-button-response.js";
-// import "../jsPsych/css/jspsych.css"
-
 import { makePlugin } from "./plugin-utils";
 
 const jsPsych = (window as any).jsPsych;

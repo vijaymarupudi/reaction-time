@@ -19,3 +19,12 @@ what the configuration provided to the plugin was.
 It is responsibility of the plugin to include the configuration in the final
 data object it returns, along with identifying information about which plugin
 was run.
+
+## Usage
+
+
+```javascript
+import * as ReactionTime from 'reaction-time-js'
+const ReactionTime = require('reaction-time-js/dist/reaction-time.umd')
+const ReactionTime = require('reaction-time-js/dist/reaction-time-jspsych.umd')
+```
