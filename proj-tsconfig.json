@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "jsx": "react",
+    "module": "es6",
+    "outDir": "./dist/",
+    "declaration": true,
+    // for React to shh
+    "moduleResolution": "node"
+  },
+  "files": ["./src/reaction-time.ts", "./src/reaction-time-jspsych.ts"]
+}
