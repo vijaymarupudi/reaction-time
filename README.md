@@ -4,7 +4,7 @@ A javascript / typescript library for online psychology experiments.
 
 ## What is a timeline generator?
 
-A timeline generator is an iterable that yields plugins.
+A timeline generator is an async or normal iterator that yields plugins.
 
 ## What is a plugin?
 

@@ -43,19 +43,28 @@ export async function init(timelineGenerator: ITimelineGenerator) {
   const screen = document.createElement('div')
   screenContainer.appendChild(screen)
 
+  // Array that holds all the data
   const data = [];
+  // The user provided timeline
   const timeline = timelineGenerator(data)
+  // Used to send the user the output of a trial
   let previousTrialData: any;
+  // To time the trials
   const stopwatch = new Stopwatch();
+  // To add to data
   let trialIndex = 0;
+
   while (true) {
     const { value: trial, done } = await timeline.next(previousTrialData);
+    // !trial to appease the type checker
     if (done || !trial) {
       break;
     }
 
+    // clear the screen
     screen.innerHTML = ''
     stopwatch.start();
+    // Display the trial
     const pluginTrialData = await trial(screen);
     const finalTrialData: ITrialFinalOutput = {
       ...stopwatch.stop(),
