@@ -31,6 +31,7 @@ export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
       jsPsych.plugins[config.type];
     resolveDefaults(config, jsPsychLegacyPlugin);
 
+    // Visual display
     // doing this to prevent class pollution of the actual screen
     const jsPsychScreen = document.createElement("div");
     screen.appendChild(jsPsychScreen);
@@ -45,7 +46,11 @@ export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
 
     return new Promise(resolve => {
       jsPsych.getDisplayElement = () => jsPsychDisplayElement;
-      jsPsych.finishTrial = resolve;
+      jsPsych.pluginAPI.createKeyboardEventListeners(document);
+      jsPsych.finishTrial = (...args) => {
+        jsPsych.pluginAPI.reset(document);
+        resolve(...args);
+      };
       jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
     });
   }
