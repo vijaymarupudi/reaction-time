@@ -7,7 +7,7 @@ interface ITimelineGenerator {
   (data: Array<Object>): Iterator<ITrial, void, ITrialFinalOutput & any>;
 }
 
-function displayData(data: Object, screen: HTMLElement): void {
+export function displayData(data: Object, screen: HTMLElement): void {
   const pre = document.createElement("pre");
   const code = document.createElement("code");
   code.innerText = JSON.stringify(data, null, 2);
@@ -67,6 +67,4 @@ export async function init(timelineGenerator: ITimelineGenerator) {
     trialIndex++;
     previousTrialData = finalTrialData;
   }
-
-  displayData(data, screen);
 }
