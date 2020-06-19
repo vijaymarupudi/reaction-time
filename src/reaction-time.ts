@@ -1,10 +1,10 @@
 import { ITrial, ITrialData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 
-type ITrialFinalOutput = ITrialData & IStopwatchOutput;
+type ITrialFinalOutput = ITrialData & IStopwatchOutput & { trialIndex: number };
 
 interface ITimelineGenerator {
-  (data: Array<Object>): Iterator<ITrial, void, ITrialFinalOutput & any>;
+  (data: Array<Object>): Iterator<ITrial, void, ITrialFinalOutput & any> | AsyncIterator<ITrial, void, ITrialFinalOutput & any>;
 }
 
 export function displayData(data: Object, screen: HTMLElement): void {
@@ -44,13 +44,13 @@ export async function init(timelineGenerator: ITimelineGenerator) {
   screenContainer.appendChild(screen)
 
   const data = [];
-  const timeline = timelineGenerator(data)[Symbol.iterator]();
+  const timeline = timelineGenerator(data)
   let previousTrialData: any;
   const stopwatch = new Stopwatch();
   let trialIndex = 0;
   while (true) {
-    const { value: trial, done } = timeline.next(previousTrialData);
-    if (done) {
+    const { value: trial, done } = await timeline.next(previousTrialData);
+    if (done || !trial) {
       break;
     }
 
@@ -70,3 +70,5 @@ export async function init(timelineGenerator: ITimelineGenerator) {
     previousTrialData = finalTrialData;
   }
 }
+
+export { makePlugin } from './plugin-utils'
