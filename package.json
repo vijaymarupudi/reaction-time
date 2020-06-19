@@ -1,6 +1,6 @@
 {
   "name": "reaction-time-js",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "dependencies": {},
