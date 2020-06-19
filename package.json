@@ -1,6 +1,6 @@
 {
   "name": "reaction-time-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "main": "dist/reaction-time.esm.js",
