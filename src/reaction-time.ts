@@ -27,6 +27,8 @@ export async function init(timelineGenerator: ITimelineGenerator) {
     targetElement.style.height = '100vh'
   }
 
+  targetElement.innerHTML = '';
+
   // screenContainer takes the dimensions of the targetElement
   const screenContainer = document.createElement('div')
   targetElement.appendChild(screenContainer);
