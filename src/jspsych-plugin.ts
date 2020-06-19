@@ -47,6 +47,7 @@ export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
     return new Promise(resolve => {
       jsPsych.getDisplayElement = () => jsPsychDisplayElement;
       jsPsych.pluginAPI.createKeyboardEventListeners(document);
+      jsPsych.pluginAPI.initAudio()
       jsPsych.finishTrial = (...args) => {
         jsPsych.pluginAPI.reset(document);
         resolve(...args);
