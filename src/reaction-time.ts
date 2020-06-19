@@ -81,6 +81,11 @@ export async function init(timelineGenerator: ITimelineGenerator) {
     trialIndex++;
     previousTrialData = finalTrialData;
   }
+
+  // Experiment over, clean up target element
+  targetElement.removeAttribute('style')
+  return data;
+
 }
 
 export { makePlugin } from './plugin-utils'
