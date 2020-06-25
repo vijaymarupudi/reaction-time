@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "es6",
+    "declaration": true,
+    "rootDir": "./src"
+  }
+}
