@@ -1,13 +1,17 @@
-import { ITrial, ITrialData } from "./types";
+import { IPlugin, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 
-type ITrialFinalOutput = ITrialData & IStopwatchOutput & { trialIndex: number };
+type ITrialFinalOutput = IPluginData &
+  IStopwatchOutput & { trialIndex: number } & Record<string, unknown>;
 
-interface ITimelineGenerator {
-  (data: Array<Object>): Iterator<ITrial, void, ITrialFinalOutput & any> | AsyncIterator<ITrial, void, ITrialFinalOutput & any>;
+interface ITimelineIterable {
+  (data: Array<ITrialFinalOutput>): Iterable<IPlugin>;
 }
 
-export function displayData(data: Object, screen: HTMLElement): void {
+export function displayData(
+  data: Record<string, unknown>,
+  screen: HTMLElement
+): void {
   const pre = document.createElement("pre");
   const code = document.createElement("code");
   code.innerText = JSON.stringify(data, null, 2);
@@ -17,46 +21,63 @@ export function displayData(data: Object, screen: HTMLElement): void {
   screen.appendChild(pre);
 }
 
-export async function init(timelineGenerator: ITimelineGenerator) {
+function getIterator<YieldType, SendType>(
+  iterable: Iterable<YieldType>
+): Iterator<YieldType, void, SendType> {
+  if (iterable[Symbol.asyncIterator]) {
+    return iterable[Symbol.asyncIterator]();
+  } else {
+    return iterable[Symbol.iterator]();
+  }
+}
 
+export async function init(
+  timelineIterableMaker: ITimelineIterable
+): Promise<Array<ITrialFinalOutput>> {
   // if body, take over the page
   const targetElement = document.body;
   if (targetElement === document.body) {
-    targetElement.style.margin = "0px"
-    targetElement.style.width = '100vw'
-    targetElement.style.height = '100vh'
+    targetElement.style.margin = "0px";
+    targetElement.style.width = "100vw";
+    targetElement.style.height = "100vh";
   }
 
-  targetElement.innerHTML = '';
+  targetElement.innerHTML = "";
 
   // not using min-height because of https://stackoverflow.com/questions/8468066/child-inside-parent-with-min-height-100-not-inheriting-height
 
   // screenContainer takes the dimensions of the targetElement
-  const screenContainer = document.createElement('div')
+  const screenContainer = document.createElement("div");
   targetElement.appendChild(screenContainer);
-  screenContainer.style.width = '100%'
-  screenContainer.style.height = '100%'
-  screenContainer.style.display = 'flex';
+  screenContainer.style.width = "100%";
+  screenContainer.style.height = "100%";
+  screenContainer.style.display = "flex";
 
-  
-  const screen = document.createElement('div')
+  const screen = document.createElement("div");
   // screen is centered within the screen container.
   // this method is for IE compat and for oversized elements to be scrollable
   // https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container
-  screen.style.margin = 'auto'
-  screenContainer.appendChild(screen)
+  screen.style.margin = "auto";
+  screenContainer.appendChild(screen);
 
   // Array that holds all the data
   const data = [];
   // The user provided timeline
-  const timeline = timelineGenerator(data)
+  const timelineIterable = timelineIterableMaker(data);
+  // this is essentially a type cast. This is because structurally, an iterator can be used like an AsyncGenerator, it is a subset. Therefore this cast. If I learn of a way to make this typesafe, I will.
+  const timeline = (getIterator(timelineIterable) as unknown) as AsyncGenerator<
+    IPlugin,
+    void,
+    ITrialFinalOutput
+  >;
   // Used to send the user the output of a trial
-  let previousTrialData: any;
+  let previousTrialData: ITrialFinalOutput;
   // To time the trials
   const stopwatch = new Stopwatch();
   // To add to data
   let trialIndex = 0;
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const { value: trial, done } = await timeline.next(previousTrialData);
     // !trial to appease the type checker
@@ -65,7 +86,7 @@ export async function init(timelineGenerator: ITimelineGenerator) {
     }
 
     // clear the screen
-    screen.innerHTML = ''
+    screen.innerHTML = "";
     stopwatch.start();
     // Display the trial
     const pluginTrialData = await trial(screen);
@@ -83,9 +104,8 @@ export async function init(timelineGenerator: ITimelineGenerator) {
   }
 
   // Experiment over, clean up target element
-  targetElement.removeAttribute('style')
+  targetElement.removeAttribute("style");
   return data;
-
 }
 
-export { makePlugin } from './plugin-utils'
+export { makePluginConstructor } from "./plugin-utils";

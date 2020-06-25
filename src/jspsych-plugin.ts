@@ -1,32 +1,22 @@
-import { makePlugin } from "./plugin-utils";
+import { makePluginConstructor } from "./plugin-utils";
+import { jsPsych, IJsPsychLegacyPlugin, IJsPsychPluginConfig } from './jspsych-stub'
 
-const jsPsych = (window as any).jsPsych;
-
-interface IJsPsychLegacyPlugin {
-  info: { parameters: { [key: string]: { default: Object } } };
-  trial: { (displayElement: HTMLElement, config: Object): void };
-}
-
-interface IJsPsychPluginConfig {
-  type: string;
-  [key: string]: any;
-}
 
 function resolveDefaults(
-  config: Object,
+  config: Record<string, unknown>,
   jsPsychLegacyPlugin: IJsPsychLegacyPlugin
 ) {
   const parameters = jsPsychLegacyPlugin.info.parameters;
-  for (const [key, value] of Object.entries(parameters)) {
+  for (const key of Object.keys(parameters)) {
     if (!config[key]) {
-      config[key] = (value as any).default;
+      config[key] = parameters[key].default;
     }
   }
 }
 
-export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
+export const jsPsychPlugin = makePluginConstructor<IJsPsychPluginConfig>(
   "jsPsychPlugin",
-  (screen, config) => {
+  (screen, config, callback) => {
     const jsPsychLegacyPlugin: IJsPsychLegacyPlugin =
       jsPsych.plugins[config.type];
     resolveDefaults(config, jsPsychLegacyPlugin);
@@ -44,15 +34,13 @@ export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
     );
     jsPsychDisplayElement.style.maxWidth = "unset"; // for compatability with reaction-time-js styles
 
-    return new Promise(resolve => {
-      jsPsych.getDisplayElement = () => jsPsychDisplayElement;
-      jsPsych.pluginAPI.createKeyboardEventListeners(document);
-      jsPsych.pluginAPI.initAudio()
-      jsPsych.finishTrial = (...args) => {
-        jsPsych.pluginAPI.reset(document);
-        resolve(...args);
-      };
-      jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
-    });
+    jsPsych.getDisplayElement = () => jsPsychDisplayElement;
+    jsPsych.pluginAPI.createKeyboardEventListeners(document);
+    jsPsych.pluginAPI.initAudio();
+    jsPsych.finishTrial = (data: Record<string, unknown>) => {
+      jsPsych.pluginAPI.reset(document);
+      callback(data);
+    };
+    jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
   }
 );

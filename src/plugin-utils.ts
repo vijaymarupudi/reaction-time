@@ -1,13 +1,19 @@
-import { IPlugin } from './types'
+import { IPluginConstructor, IPluginData } from "./types";
 
-export function makePlugin<T>(
+export function makePluginConstructor<T>(
   type: string,
-  inputParam: (screen: HTMLElement, config: T) => Promise<Object>
-): IPlugin {
+  inputParam: (
+    screen: HTMLElement,
+    config: T,
+    callback: (data: IPluginData['output']) => void
+  ) => void
+): IPluginConstructor<T> {
   return function(config: T) {
     return async function(screen: HTMLElement) {
-      const output = await inputParam(screen, config);
-      return { type, input: config, output }    
+      const output = await new Promise(resolve => {
+        inputParam(screen, config, resolve);
+      });
+      return { type, input: config, output };
     };
   };
 }

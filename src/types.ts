@@ -1,13 +1,13 @@
-export type ITrialData = {
-  input: Object,
-  output: Object
-};
-
-
-export interface ITrial {
-  (screen: HTMLElement): Promise<ITrialData>;
+export interface IPluginData {
+  input: unknown;
+  output: unknown;
+  [others: string]: unknown;
 }
 
 export interface IPlugin {
-  (config: any): ITrial;
+  (screen: HTMLElement): Promise<IPluginData>;
+}
+
+export interface IPluginConstructor<T> {
+  (config: T): IPlugin;
 }
