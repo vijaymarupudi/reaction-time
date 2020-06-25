@@ -1,6 +1,6 @@
 {
   "name": "reaction-time-js",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "dependencies": {},
@@ -32,5 +32,7 @@
   },
   "main": "./dist/reaction-time/reaction-time.js",
   "license": "LGPL-3.0-or-later",
-  "files": ["dist/"]
+  "files": [
+    "dist/"
+  ]
 }
