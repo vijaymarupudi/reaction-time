@@ -1,6 +1,5 @@
 import { IPlugin, IPluginData } from "./types";
 
-
 /**
  * A helper to make plugins. Provide is a function that takes the screen and
  * settings and calls the callback with the data. The helper will insert the
@@ -8,13 +7,14 @@ import { IPlugin, IPluginData } from "./types";
  * @param type The name of the plugin to be inserted into the data object.
  * @param inputParam The plugin function that collects data and calls the
  * callback function with it.
+ * @typeParam T The type of the configuration that the plugin will expect.
  */
 export function makePlugin<T>(
   type: string,
   inputParam: (
     screen: HTMLElement,
     config: T,
-    callback: (data: IPluginData['output']) => void
+    callback: (data: IPluginData["output"]) => void
   ) => void
 ): IPlugin<T> {
   return function(config: T) {

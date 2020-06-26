@@ -126,4 +126,4 @@ export async function init(
   return data;
 }
 
-export { makePlugin as makePluginConstructor } from "./plugin-utils";
+export { makePlugin } from "./plugin-utils";
