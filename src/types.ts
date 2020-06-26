@@ -4,10 +4,10 @@ export interface IPluginData {
   [others: string]: unknown;
 }
 
-export interface IPlugin {
+export interface IPluginInstance {
   (screen: HTMLElement): Promise<IPluginData>;
 }
 
-export interface IPluginConstructor<T> {
-  (config: T): IPlugin;
+export interface IPlugin<T> {
+  (config: T): IPluginInstance;
 }

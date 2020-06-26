@@ -1,4 +1,4 @@
-import { makePluginConstructor } from "./plugin-utils";
+import { makePlugin } from "./plugin-utils";
 import { jsPsych, IJsPsychLegacyPlugin, IJsPsychPluginConfig } from './jspsych-stub'
 
 
@@ -14,7 +14,7 @@ function resolveDefaults(
   }
 }
 
-export const jsPsychPlugin = makePluginConstructor<IJsPsychPluginConfig>(
+export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
   "jsPsychPlugin",
   (screen, config, callback) => {
     const jsPsychLegacyPlugin: IJsPsychLegacyPlugin =

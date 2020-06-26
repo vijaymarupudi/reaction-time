@@ -1,13 +1,19 @@
-import { IPlugin, IPluginData } from "./types";
+import { IPluginInstance, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 
 type ITrialFinalOutput = IPluginData &
   IStopwatchOutput & { trialIndex: number } & Record<string, unknown>;
 
 interface ITimelineIterable {
-  (data: Array<ITrialFinalOutput>): Iterable<IPlugin>;
+  (data: Array<ITrialFinalOutput>): Iterable<IPluginInstance>;
 }
 
+
+/**
+ * Takes in a javascript object and displays them on the screen.
+ * @param data The javascript object
+ * @param screen The html element to display the data in.
+ */
 export function displayData(
   data: Record<string, unknown>,
   screen: HTMLElement
@@ -21,6 +27,9 @@ export function displayData(
   screen.appendChild(pre);
 }
 
+/**
+ * Convertes an iterable in either an async or sync iterator
+ */
 function getIterator<YieldType, SendType>(
   iterable: Iterable<YieldType>
 ): Iterator<YieldType, void, SendType> {
@@ -31,6 +40,15 @@ function getIterator<YieldType, SendType>(
   }
 }
 
+/**
+ * The core of reaction-time. Takes in an iterable that yields plugin
+ * instances, which are then run with the screen. Collects data from the
+ * instances.
+ *
+ * @param timelineIterableMaker An iterable that yields plugin instances. This
+ * can be a generator function (recommended) or an array.
+ * @returns A promise holding the data for the experiment.
+ */
 export async function init(
   timelineIterableMaker: ITimelineIterable
 ): Promise<Array<ITrialFinalOutput>> {
@@ -66,7 +84,7 @@ export async function init(
   const timelineIterable = timelineIterableMaker(data);
   // this is essentially a type cast. This is because structurally, an iterator can be used like an AsyncGenerator, it is a subset. Therefore this cast. If I learn of a way to make this typesafe, I will.
   const timeline = (getIterator(timelineIterable) as unknown) as AsyncGenerator<
-    IPlugin,
+    IPluginInstance,
     void,
     ITrialFinalOutput
   >;
@@ -108,4 +126,4 @@ export async function init(
   return data;
 }
 
-export { makePluginConstructor } from "./plugin-utils";
+export { makePlugin as makePluginConstructor } from "./plugin-utils";
