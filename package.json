@@ -26,7 +26,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production npx rollup -c && npx tsc",
-    "dev": "npx tsc --watch"
+    "dev": "NODE_ENV=development npx rollup -c -w"
   },
   "main": "./dist/bundles/reaction-time.es.js",
   "types": "./dist/types/reaction-time.d.ts",

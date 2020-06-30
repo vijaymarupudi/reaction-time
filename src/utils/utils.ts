@@ -10,6 +10,6 @@ export function displayData(exp: Sequence): void {
   const code = document.createElement("code");
   code.innerText = JSON.stringify(exp.data, null, 2);
   pre.appendChild(code);
-  exp.element.innerHTML = "";
-  exp.element.appendChild(pre);
+  exp.root.innerHTML = "";
+  exp.root.appendChild(pre);
 }
