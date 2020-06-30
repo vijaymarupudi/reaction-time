@@ -6,7 +6,6 @@ type IDataItem = IPluginData &
 
 type ITimelineIterableFunc = () => Iterable<IPluginInstance>;
 
-
 /**
  * Convertes an iterable in either an async or sync iterator
  */
@@ -20,11 +19,24 @@ function getIterator<YieldType, SendType>(
   }
 }
 
+interface ISequenceSettings {
+  root: HTMLElement;
+  onPluginFinish?: (item: IDataItem) => void;
+}
+
+const SEQUENCE_SETTINGS_DEFAULT: ISequenceSettings = {
+  root: document.body,
+};
+
 export class Sequence {
-  public element: HTMLElement;
+  public root: HTMLElement;
   public data: Array<IDataItem>;
-  constructor(element?: HTMLElement) {
-    this.element = element ?? document.body;
+  public settings: ISequenceSettings;
+  constructor(settings?: Partial<ISequenceSettings>) {
+    const finalSettings = { ...SEQUENCE_SETTINGS_DEFAULT };
+    Object.assign(finalSettings, settings);
+    this.settings = finalSettings;
+    this.root = finalSettings.root;
   }
 
   /**
@@ -40,19 +52,19 @@ export class Sequence {
     timelineIterableFunc: ITimelineIterableFunc
   ): Promise<Array<IDataItem>> {
     // if body, take over the page
-    if (this.element === document.body) {
-      this.element.style.margin = "0px";
-      this.element.style.width = "100vw";
-      this.element.style.height = "100vh";
+    if (this.root === document.body) {
+      this.root.style.margin = "0px";
+      this.root.style.width = "100vw";
+      this.root.style.height = "100vh";
     }
 
-    this.element.innerHTML = "";
+    this.root.innerHTML = "";
 
     // not using min-height because of https://stackoverflow.com/questions/8468066/child-inside-parent-with-min-height-100-not-inheriting-height
 
-    // screenContainer takes the dimensions of the this.element
+    // screenContainer takes the dimensions of the this.root
     const screenContainer = document.createElement("div");
-    this.element.appendChild(screenContainer);
+    this.root.appendChild(screenContainer);
     screenContainer.style.width = "100%";
     screenContainer.style.height = "100%";
     screenContainer.style.display = "flex";
@@ -67,7 +79,7 @@ export class Sequence {
     // Array that holds all the data
     this.data = [];
 
-    const timelineIterable = timelineIterableFunc()
+    const timelineIterable = timelineIterableFunc();
     // this is essentially a type cast. This is because structurally, an iterator can be used like an AsyncGenerator, it is a subset. Therefore this cast. If I learn of a way to make this typesafe, I will.
     const timeline = (getIterator(
       timelineIterable
@@ -100,13 +112,18 @@ export class Sequence {
 
       this.data.push(finalTrialData);
 
+      // callback
+      if (this.settings.onPluginFinish) {
+        this.settings.onPluginFinish(finalTrialData);
+      }
+
       // wrapping up for next iteration
       trialIndex++;
       previousTrialData = finalTrialData;
     }
 
     // Sequence over, clean up target element
-    this.element.removeAttribute("style");
+    this.root.removeAttribute("style");
     return this.data;
   }
 }
