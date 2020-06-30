@@ -35,7 +35,7 @@ const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
     const jsPsychDisplayElement: HTMLElement = jsPsychScreen.querySelector(
       "#jspsych-content"
     );
-    jsPsychDisplayElement.style.maxWidth = "unset"; // for compatability with reaction-time-js styles
+    jsPsychDisplayElement.style.maxWidth = "unset"; // for compatability with reaction-time styles
 
     jsPsych.getDisplayElement = () => jsPsychDisplayElement;
     jsPsych.pluginAPI.createKeyboardEventListeners(document);
