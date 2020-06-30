@@ -1,6 +1,9 @@
-import { makePlugin } from "./plugin-utils";
-import { jsPsych, IJsPsychLegacyPlugin, IJsPsychPluginConfig } from './jspsych-stub'
-
+import { makePlugin } from "../../make-plugin";
+import {
+  jsPsych,
+  IJsPsychLegacyPlugin,
+  IJsPsychPluginConfig
+} from "./jspsych-stub";
 
 function resolveDefaults(
   config: Record<string, unknown>,
@@ -14,7 +17,7 @@ function resolveDefaults(
   }
 }
 
-export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
+const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
   "jsPsychPlugin",
   (screen, config, callback) => {
     const jsPsychLegacyPlugin: IJsPsychLegacyPlugin =
@@ -44,3 +47,5 @@ export const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
     jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
   }
 );
+
+export { jsPsychPlugin as jsPsych };

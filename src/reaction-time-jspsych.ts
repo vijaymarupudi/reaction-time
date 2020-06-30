@@ -41,4 +41,3 @@ import "../jsPsych/plugins/jspsych-vsl-grid-scene.js"
 
 export const jsPsych = (window as any).jsPsych
 export * from './reaction-time'
-export { jsPsychPlugin } from './jspsych-plugin'
