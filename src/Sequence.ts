@@ -83,9 +83,9 @@ export class Sequence {
     // this is essentially a type cast. This is because structurally, an iterator can be used like an AsyncGenerator, it is a subset. Therefore this cast. If I learn of a way to make this typesafe, I will.
     const timeline = (getIterator(
       timelineIterable
-    ) as unknown) as AsyncGenerator<IPluginInstance, void, IDataItem>;
+    ) as unknown) as AsyncGenerator<IPluginInstance, void, IDataItem['output']>;
     // Used to send the user the output of a trial
-    let previousTrialData: IDataItem;
+    let previousTrialOutput: IDataItem['output'];
     // To time the trials
     const stopwatch = new Stopwatch();
     // To add to data
@@ -93,7 +93,7 @@ export class Sequence {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const { value: trial, done } = await timeline.next(previousTrialData);
+      const { value: trial, done } = await timeline.next(previousTrialOutput);
       // !trial to appease the type checker
       if (done || !trial) {
         break;
@@ -119,7 +119,7 @@ export class Sequence {
 
       // wrapping up for next iteration
       trialIndex++;
-      previousTrialData = finalTrialData;
+      previousTrialOutput = finalTrialData.output;
     }
 
     // Sequence over, clean up target element
