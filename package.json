@@ -24,8 +24,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV=production npx rollup -c && npx tsc --project proj-tsconfig.json",
-    "dev": "NODE_ENV=development npx rollup -c --watch"
+    "build": "NODE_ENV=production npx rollup -c && npx tsc",
+    "dev": "npx tsc --watch"
   },
   "main": "./dist/reaction-time/reaction-time.js",
   "license": "LGPL-3.0-or-later",

@@ -1,6 +1,7 @@
 import { IPluginInstance, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 export { makePlugin } from "./make-plugin";
+export * as plugins from './plugins/plugins'
 
 type ITrialFinalOutput = IPluginData &
   IStopwatchOutput & { trialIndex: number } & Record<string, unknown>;
