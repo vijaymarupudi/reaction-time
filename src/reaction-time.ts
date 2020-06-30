@@ -1,29 +1,26 @@
 import { IPluginInstance, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 export { makePlugin } from "./make-plugin";
-export * as plugins from './plugins/plugins'
+export * as plugins from "./plugins/plugins";
 
-type ITrialFinalOutput = IPluginData &
+type IDataItem = IPluginData &
   IStopwatchOutput & { trialIndex: number } & Record<string, unknown>;
 
-type ITimelineIterable = Iterable<IPluginInstance>;
+type ITimelineIterableFunc = () => Iterable<IPluginInstance>;
 
 /**
  * Takes in a javascript object and displays them on the screen.
  * @param data The javascript object
  * @param screen The html element to display the data in.
  */
-export function displayData(
-  data: Record<string, unknown>,
-  screen: HTMLElement
-): void {
+export function displayData(exp: Experiment): void {
   const pre = document.createElement("pre");
   const code = document.createElement("code");
-  code.innerText = JSON.stringify(data, null, 2);
+  code.innerText = JSON.stringify(exp.data, null, 2);
   pre.appendChild(code);
 
-  screen.innerHTML = "";
-  screen.appendChild(pre);
+  exp.element.innerHTML = "";
+  exp.element.appendChild(pre);
 }
 
 /**
@@ -40,7 +37,8 @@ function getIterator<YieldType, SendType>(
 }
 
 export class Experiment {
-  private element: HTMLElement;
+  public element: HTMLElement;
+  public data: Array<IDataItem>;
   constructor(element?: HTMLElement) {
     this.element = element ?? document.body;
   }
@@ -50,13 +48,13 @@ export class Experiment {
    * instances, which are then run with the screen. Collects data from the
    * instances.
    *
-   * @param timelineIterable An iterable that yields plugin instances. This
-   * can be a generator function (recommended) or an array.
+   * @param timelineIterableFunc A function that returns an iterable. This can
+   * be a generator function (recommended) or a function that returns an array.
    * @returns A promise holding the data for the experiment.
    */
   async init(
-    timelineIterable: ITimelineIterable
-  ): Promise<Array<ITrialFinalOutput>> {
+    timelineIterableFunc: ITimelineIterableFunc
+  ): Promise<Array<IDataItem>> {
     // if body, take over the page
     if (this.element === document.body) {
       this.element.style.margin = "0px";
@@ -83,13 +81,15 @@ export class Experiment {
     screenContainer.appendChild(screen);
 
     // Array that holds all the data
-    const data = [];
+    this.data = [];
+
+    const timelineIterable = timelineIterableFunc()
     // this is essentially a type cast. This is because structurally, an iterator can be used like an AsyncGenerator, it is a subset. Therefore this cast. If I learn of a way to make this typesafe, I will.
     const timeline = (getIterator(
       timelineIterable
-    ) as unknown) as AsyncGenerator<IPluginInstance, void, ITrialFinalOutput>;
+    ) as unknown) as AsyncGenerator<IPluginInstance, void, IDataItem>;
     // Used to send the user the output of a trial
-    let previousTrialData: ITrialFinalOutput;
+    let previousTrialData: IDataItem;
     // To time the trials
     const stopwatch = new Stopwatch();
     // To add to data
@@ -108,13 +108,13 @@ export class Experiment {
       stopwatch.start();
       // Display the trial
       const pluginTrialData = await trial(screen);
-      const finalTrialData: ITrialFinalOutput = {
+      const finalTrialData: IDataItem = {
         ...stopwatch.stop(),
         trialIndex,
-        ...pluginTrialData
+        ...pluginTrialData,
       };
 
-      data.push(finalTrialData);
+      this.data.push(finalTrialData);
 
       // wrapping up for next iteration
       trialIndex++;
@@ -123,7 +123,6 @@ export class Experiment {
 
     // Experiment over, clean up target element
     this.element.removeAttribute("style");
-    return data;
+    return this.data;
   }
 }
-

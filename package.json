@@ -27,7 +27,7 @@
     "build": "NODE_ENV=production npx rollup -c && npx tsc",
     "dev": "npx tsc --watch"
   },
-  "main": "./dist/reaction-time/reaction-time.js",
+  "main": "./dist/reaction-time.js",
   "license": "LGPL-3.0-or-later",
   "files": [
     "dist/"
