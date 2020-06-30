@@ -1,5 +1,5 @@
 {
-  "name": "reaction-time-js",
+  "name": "@vijaymarupudi/reaction-time",
   "version": "0.0.9",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
@@ -31,5 +31,17 @@
   "license": "LGPL-3.0-or-later",
   "files": [
     "dist/"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vijaymarupudi/reaction-time.git"
+  },
+  "keywords": [
+    "psychology",
+    "experiments"
+  ],
+  "bugs": {
+    "url": "https://github.com/vijaymarupudi/reaction-time/issues"
+  },
+  "homepage": "https://github.com/vijaymarupudi/reaction-time#readme"
 }
