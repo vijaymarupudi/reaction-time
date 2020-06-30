@@ -23,7 +23,14 @@ was run.
 ## Usage
 
 ```javascript
-import * as ReactionTime from 'reaction-time'
-const ReactionTime = require('reaction-time/dist/reaction-time.umd')
-const ReactionTime = require('reaction-time/dist/reaction-time-jspsych.umd')
+import * as RT from '@vijaymarupudi/reaction-time' // if using a bundler
+
+const exp = new RT.Experiment()
+
+exp.init(function*() {
+  yield RT.plugins.jsPsych({
+    type: 'html-button-response',
+    // ...
+  })
+})
 ```
