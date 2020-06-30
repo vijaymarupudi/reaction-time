@@ -12,14 +12,15 @@ export interface IJsPsychPluginConfig {
 
 interface IPluginAPI {
   createKeyboardEventListeners(el: HTMLDocument): void;
-  initAudio(): void;
   reset(el: HTMLDocument): void;
+  audioContext: () => any;
 }
 
 /* eslint-disable @typescript-eslint/no-namespace */
 interface IJsPsych {
   plugins: { [key: string]: IJsPsychLegacyPlugin };
   getDisplayElement(): Element;
+  webaudio_context: unknown;
   finishTrial(data: Record<string, unknown>): void;
   pluginAPI: IPluginAPI;
 }

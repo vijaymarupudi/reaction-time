@@ -2,8 +2,9 @@ import { makePlugin } from "../../make-plugin";
 import {
   jsPsych,
   IJsPsychLegacyPlugin,
-  IJsPsychPluginConfig
+  IJsPsychPluginConfig,
 } from "./jspsych-stub";
+import { IPlugin } from "../../types";
 
 function resolveDefaults(
   config: Record<string, unknown>,
@@ -17,9 +18,52 @@ function resolveDefaults(
   }
 }
 
+let jsPsychWebAudioContext: any = null;
+let jsPsychInitiated = false;
+
+interface IInitConfig {
+  use_webaudio?: boolean;
+}
+
+function init(config: IInitConfig): void {
+  if (jsPsychInitiated) {
+    return;
+  }
+  if (config.use_webaudio === undefined) {
+    config.use_webaudio = true;
+  }
+
+  jsPsych.pluginAPI.createKeyboardEventListeners(document);
+
+  jsPsychWebAudioContext = config.use_webaudio
+    ? jsPsych.webaudio_context
+    : null;
+
+  jsPsych.pluginAPI.audioContext = () => {
+    if (jsPsychWebAudioContext !== null) {
+      if (jsPsychWebAudioContext.state !== "running") {
+        jsPsychWebAudioContext.resume();
+      }
+    }
+    return jsPsychWebAudioContext;
+  };
+
+  jsPsychInitiated = true;
+}
+
+interface IJsPsychPlugin extends IPlugin<IJsPsychPluginConfig> {
+  init: (config: IInitConfig) => void;
+}
+
 const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
   "jsPsychPlugin",
   (screen, config, callback) => {
+    if (!jsPsychInitiated) {
+      throw Error(
+        "jsPsych plugin not initiated. Please call RT.plugins.jsPsych.init()"
+      );
+    }
+
     const jsPsychLegacyPlugin: IJsPsychLegacyPlugin =
       jsPsych.plugins[config.type];
     resolveDefaults(config, jsPsychLegacyPlugin);
@@ -35,17 +79,19 @@ const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
     const jsPsychDisplayElement: HTMLElement = jsPsychScreen.querySelector(
       "#jspsych-content"
     );
-    jsPsychDisplayElement.style.maxWidth = "unset"; // for compatability with reaction-time styles
+    jsPsychDisplayElement.style.maxWidth = "unset"; // for compatibility with reaction-time styles
 
     jsPsych.getDisplayElement = () => jsPsychDisplayElement;
-    jsPsych.pluginAPI.createKeyboardEventListeners(document);
-    jsPsych.pluginAPI.initAudio();
+
     jsPsych.finishTrial = (data: Record<string, unknown>) => {
-      jsPsych.pluginAPI.reset(document);
+      // Do not call this! This breaks the 'held_key' aspect of jsPsych's keyboard listeners
+      // -> jsPsych.pluginAPI.reset(document);
       callback(data);
     };
     jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
   }
-);
+) as IJsPsychPlugin;
+
+jsPsychPlugin.init = init;
 
 export { jsPsychPlugin as jsPsych };

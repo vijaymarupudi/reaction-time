@@ -40,3 +40,8 @@ exp.init(function*() {
 * `reaction-time-core` comes with `Sequence` and `makePlugin`, the bare minimum you need for a DIY experiment.
 * In addition, `reaction-time` comes with plugins and tachyons for css.
 * In addition, `reaction-time-jspsych` comes with jsPsych (including it's css).
+
+## Notes
+
+* `RT.plugins.jsPsych` does not call jsPsych.pluginAPI.reset(). This will not
+  impact data collection.
