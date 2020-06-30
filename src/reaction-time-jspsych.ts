@@ -39,5 +39,7 @@ import "../jsPsych/plugins/jspsych-visual-search-circle.js"
 import "../jsPsych/plugins/jspsych-vsl-animate-occlusion.js"
 import "../jsPsych/plugins/jspsych-vsl-grid-scene.js"
 
+import "../jsPsych/css/jspsych.css"
+
 export const jsPsych = (window as any).jsPsych
 export * from './reaction-time'
