@@ -2,7 +2,7 @@ import { IPluginInstance, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
 
 type IDataItem = IPluginData &
-  IStopwatchOutput & { trialIndex: number } & Record<string, unknown>;
+  IStopwatchOutput & { pluginIndex: number } & Record<string, unknown>;
 
 type ITimelineIterableFunc = () => Iterable<IPluginInstance>;
 
@@ -84,42 +84,42 @@ export class Sequence {
     const timeline = (getIterator(
       timelineIterable
     ) as unknown) as AsyncGenerator<IPluginInstance, void, IDataItem['output']>;
-    // Used to send the user the output of a trial
-    let previousTrialOutput: IDataItem['output'];
-    // To time the trials
+    // Used to send the user the output of a plugin
+    let previousPluginOutput: IDataItem['output'];
+    // To time the plugins
     const stopwatch = new Stopwatch();
     // To add to data
-    let trialIndex = 0;
+    let pluginIndex = 0;
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const { value: trial, done } = await timeline.next(previousTrialOutput);
-      // !trial to appease the type checker
-      if (done || !trial) {
+      const { value: plugin, done } = await timeline.next(previousPluginOutput);
+      // !plugin to appease the type checker
+      if (done || !plugin) {
         break;
       }
 
       // clear the screen
       screen.innerHTML = "";
       stopwatch.start();
-      // Display the trial
-      const pluginTrialData = await trial(screen);
-      const finalTrialData: IDataItem = {
+      // Display the plugin
+      const tmpPluginData = await plugin(screen);
+      const finalPluginData: IDataItem = {
         ...stopwatch.stop(),
-        trialIndex,
-        ...pluginTrialData,
+        pluginIndex,
+        ...tmpPluginData,
       };
 
-      this.data.push(finalTrialData);
+      this.data.push(finalPluginData);
 
       // callback
       if (this.settings.onPluginFinish) {
-        this.settings.onPluginFinish(finalTrialData);
+        this.settings.onPluginFinish(finalPluginData);
       }
 
       // wrapping up for next iteration
-      trialIndex++;
-      previousTrialOutput = finalTrialData.output;
+      pluginIndex++;
+      previousPluginOutput = finalPluginData.output;
     }
 
     // Sequence over, clean up target element
