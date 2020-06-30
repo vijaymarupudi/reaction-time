@@ -1,4 +1,4 @@
-# reaction-time-js
+# reaction-time
 
 A javascript / typescript library for online psychology experiments.
 
@@ -13,7 +13,7 @@ function plugin(screen: HTMLElement);
 ```
 
 More specifically, a plugin is a closure function that contains the
-configuration for the experiment. The core of reaction-time-js has no idea of
+configuration for the experiment. The core of reaction-time has no idea of
 what the configuration provided to the plugin was.
 
 It is responsibility of the plugin to include the configuration in the final
@@ -22,9 +22,8 @@ was run.
 
 ## Usage
 
-
 ```javascript
-import * as ReactionTime from 'reaction-time-js'
-const ReactionTime = require('reaction-time-js/dist/reaction-time.umd')
-const ReactionTime = require('reaction-time-js/dist/reaction-time-jspsych.umd')
+import * as ReactionTime from 'reaction-time'
+const ReactionTime = require('reaction-time/dist/reaction-time.umd')
+const ReactionTime = require('reaction-time/dist/reaction-time-jspsych.umd')
 ```
