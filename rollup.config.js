@@ -3,117 +3,66 @@ import { babel } from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+import process from "process";
+import postcss from 'rollup-plugin-postcss'
 
-function std(jsPsych = false, es = true) {
+function generate({ jsPsych = false, es = true, libraryDevelopment = false, core = false }) {
+  
+  if (core && jsPsych) {
+    throw "core and jsPsych cannot be on at the same time"
+  }
+
   return {
-    input: `./src/reaction-time${jsPsych ? "-jspsych" : ""}.ts`,
+    input: `./src/reaction-time${jsPsych ? "-jspsych" : ""}${core ? '-core' : ''}.ts`,
     plugins: [
       typescript({
         tsconfig: false,
         module: "es6",
-        target: "es2019"
-      })
+        target: "es2019",
+      }),
+      resolve(), // for third party dependencies
+      postcss(),
+      ...(!es && !libraryDevelopment
+        ? [
+            babel({
+              babelHelpers: "bundled",
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    targets: "> 0.25%, not dead",
+                    useBuiltIns: "usage",
+                    corejs: 3,
+                  },
+                ],
+              ],
+              exclude: "node_modules/**/*",
+              extensions: [".js", ".ts", ".tsx"],
+            }),
+            resolve(),
+            commonjs(),
+          ]
+        : []),
     ],
     output: [
       {
-        file: `./dist/bundles/reaction-time${jsPsych ? "-jspsych" : ""}.${es ? 'es' : 'umd'}.js`,
-        plugins: [terser()],
-        format: es ? 'es' : 'umd',
-        ...es ? {} : {name: 'RT'}
-      }
-    ]
+        file: `./dist/bundles/reaction-time${jsPsych ? "-jspsych" : ""}${core ? '-core' : ''}.${
+          es ? "es" : "umd"
+        }.js`,
+        plugins: libraryDevelopment ? [] : [terser()],
+        format: es ? "es" : "umd",
+        ...(es ? {} : { name: "RT" }),
+      },
+    ],
   };
 }
 
-function umd(jsPsych = false) {
-  const base = std(jsPsych, false);
-  base.plugins.push(
-    babel({
-      babelHelpers: "bundled",
-      presets: [
-        [
-          "@babel/preset-env",
-          {
-            targets: "> 0.25%, not dead",
-            useBuiltIns: "usage",
-            corejs: 3
-          }
-        ]
-      ],
-      exclude: "node_modules/**/*",
-      extensions: [".js", ".ts", ".tsx"]
-    }),
-    resolve(),
-    commonjs()
-  );
-  return base
-}
+const DEV_MODE = process.env.NODE_ENV == "development";
 
 export default [
-  std(),
-  std(true),
-  umd(),
-  umd(true)
-  // {
-  //   input: "./src/reaction-time.ts",
-  //   plugins: [
-  //     typescript({
-  //       jsx: 'react'
-  //     }),
-  //     babel({
-  //       babelHelpers: "bundled",
-  //       presets: [
-  //         [
-  //           "@babel/preset-env",
-  //           {
-  //             targets: "> 0.25%, not dead",
-  //             useBuiltIns: "usage",
-  //             corejs: 3
-  //           }
-  //         ]
-  //       ],
-  //       exclude: "node_modules/**/*",
-  //       extensions: [".js", ".ts", ".tsx"]
-  //     }),
-  //     resolve(),
-  //     commonjs()
-  //   ],
-  //   output: {
-  //     file: "dist/reaction-time.umd.js",
-  //     format: "umd",
-  //     name: "ReactionTime",
-  //     plugins: [terser()]
-  //   }
-  // },
-  // {
-  // input: "./src/reaction-time-jspsych.ts",
-  // plugins: [
-  //   typescript({
-  //     jsx: 'react'
-  //   }),
-  //   babel({
-  //     babelHelpers: "bundled",
-  //     presets: [
-  //       [
-  //         "@babel/preset-env",
-  //         {
-  //           targets: "> 0.25%, not dead",
-  //           useBuiltIns: "usage",
-  //           corejs: 3
-  //         }
-  //       ]
-  //     ],
-  //     exclude: "node_modules/**/*",
-  //     extensions: [".js", ".ts", ".tsx"]
-  //   }),
-  //   resolve(),
-  //   commonjs()
-  // ],
-  // output: {
-  //   file: "dist/reaction-time-jspsych.umd.js",
-  //   format: "umd",
-  //   name: "ReactionTime",
-  //   plugins: [terser()]
-  // }
-  // },
+  generate({ jsPsych: true, es: true, libraryDevelopment: DEV_MODE }),
+  generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE }),
+  generate({ jsPsych: true, es: false, libraryDevelopment: DEV_MODE }),
+  generate({ jsPsych: false, es: false, libraryDevelopment: DEV_MODE }),
+  generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE, core: true }),
 ];

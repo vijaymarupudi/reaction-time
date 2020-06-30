@@ -1,8 +1,8 @@
 function dateToISO8601(date: Date) {
-  var tzo = -date.getTimezoneOffset(),
+  const tzo = -date.getTimezoneOffset(),
     dif = tzo >= 0 ? "+" : "-",
     pad = function(num: number) {
-      var norm = Math.floor(Math.abs(num));
+      const norm = Math.floor(Math.abs(num));
       return (norm < 10 ? "0" : "") + norm;
     };
   return (
@@ -35,7 +35,7 @@ export class Stopwatch {
   private _startDateTime: Date;
   private _startTimeStamp: number;
 
-  start() {
+  start(): void {
     this._startTimeStamp = performance.now();
     this._startDateTime = new Date(Date.now());
   }

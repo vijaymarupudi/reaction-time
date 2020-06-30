@@ -3,7 +3,8 @@
     "target": "es2019",
     "module": "es6",
     "declaration": true,
+    "emitDeclarationOnly": true,
     "rootDir": "./src/",
-    "outDir": "./dist/"
+    "outDir": "./dist/types"
   }
 }
