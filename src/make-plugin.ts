@@ -17,11 +17,12 @@ export function makePlugin<T>(
     callback: (data: IPluginData["output"]) => void
   ) => void
 ): IPlugin<T> {
-  return function(config: T) {
-    return async function(screen: HTMLElement) {
-      const output = await new Promise(resolve => {
+  return function (config: T) {
+    return async function (screen: HTMLElement) {
+      const output = await new Promise((resolve) => {
         inputParam(screen, config, resolve);
       });
+
       return { type, input: config, output };
     };
   };
