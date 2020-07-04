@@ -1,6 +1,6 @@
 {
   "name": "@vijaymarupudi/reaction-time",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "dependencies": {
