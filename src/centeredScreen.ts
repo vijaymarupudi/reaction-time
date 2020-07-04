@@ -1,10 +1,10 @@
-export function centeredScreen(rootScreen: HTMLElement) {
-
+export function centeredScreen(rootScreen: HTMLElement): HTMLElement {
   // not using min-height because of https://stackoverflow.com/questions/8468066/child-inside-parent-with-min-height-100-not-inheriting-height
 
   // screenContainer takes the dimensions of the rootScreen
 
   const screenContainer = document.createElement("div");
+  rootScreen.textContent = "";
   rootScreen.appendChild(screenContainer);
   screenContainer.style.width = "100%";
   screenContainer.style.height = "100%";
