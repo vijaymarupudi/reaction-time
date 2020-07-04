@@ -30,7 +30,9 @@ function init(config?: IInitConfig): void {
     return;
   }
 
-  if (!config) { config = {}; }
+  if (!config) {
+    config = {};
+  }
 
   if (config.use_webaudio === undefined) {
     config.use_webaudio = true;
@@ -60,16 +62,17 @@ interface IJsPsychPlugin extends IPlugin<IJsPsychPluginConfig> {
 
 const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
   "jsPsychPlugin",
-  (screen, config, callback) => {
+  (screen, userConfig, callback) => {
     if (!jsPsychInitiated) {
       throw Error(
         "jsPsych plugin not initiated. Please call RT.plugins.jsPsych.init()"
       );
     }
 
+    const jsPsychConfig = { ...userConfig };
     const jsPsychLegacyPlugin: IJsPsychLegacyPlugin =
-      jsPsych.plugins[config.type];
-    resolveDefaults(config, jsPsychLegacyPlugin);
+      jsPsych.plugins[jsPsychConfig.type];
+    resolveDefaults(jsPsychConfig, jsPsychLegacyPlugin);
 
     // Visual display
     // doing this to prevent class pollution of the actual screen
@@ -91,7 +94,7 @@ const jsPsychPlugin = makePlugin<IJsPsychPluginConfig>(
       // -> jsPsych.pluginAPI.reset(document);
       callback(data);
     };
-    jsPsychLegacyPlugin.trial(jsPsychDisplayElement, config);
+    jsPsychLegacyPlugin.trial(jsPsychDisplayElement, jsPsychConfig);
   }
 ) as IJsPsychPlugin;
 
