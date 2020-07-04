@@ -54,13 +54,18 @@ export class Sequence {
     // if body, take over the page
     if (this.root === document.body) {
       this.root.style.margin = "0px";
-      this.root.style.width = "100vw";
       // maxWidth is necessary for horizontal scrollbars to not appear when the
       // viewport is longer than 100vh (scrollbars will take up space). This
       // caps 100vw to be the maximum width without scrollbars.
       // https://stackoverflow.com/questions/23367345/100vw-causing-horizontal-overflow-but-only-if-more-than-one
+      this.root.style.width = "100vw";
       this.root.style.maxWidth = '100%' 
-      this.root.style.height = "100vh";
+      this.root.style.height = '100vh';
+      // This is being done to prevent scrollbars from appearing when the first element of the root element has a margin. This is due to margin collapsing
+      //
+      // See https://stackoverflow.com/questions/19718634/how-to-disable-margin-collapsing
+      this.root.style.display = 'flex';
+      this.root.style.flexDirection = 'column';
     }
 
     // clear the root element

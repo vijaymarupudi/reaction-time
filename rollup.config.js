@@ -19,8 +19,10 @@ function generate({ jsPsych = false, es = true, libraryDevelopment = false, core
         tsconfig: false,
         module: "es6",
         target: "es2019",
+        esModuleInterop: true
       }),
-      resolve(), // for third party dependencies
+      resolve(), // for third party dependencies (like mithril)
+      commonjs(),
       postcss(),
       ...(!es && !libraryDevelopment
         ? [

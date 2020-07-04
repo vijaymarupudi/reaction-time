@@ -1,7 +1,7 @@
 import { Sequence } from "../Sequence";
 
 /**
- * Takes in an experiment and displays the data on the screen
+ * Takes in a sequence and displays the data on the screen
  * @param data The javascript object
  * @param screen The html element to display the data in.
  */

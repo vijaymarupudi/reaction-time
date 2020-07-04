@@ -3,7 +3,9 @@
   "version": "0.0.10",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
-  "dependencies": {},
+  "dependencies": {
+    "mithril": "^2.0.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.1",
