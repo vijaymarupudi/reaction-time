@@ -66,10 +66,16 @@ export class Sequence {
       // See https://stackoverflow.com/questions/19718634/how-to-disable-margin-collapsing
       this.root.style.display = 'flex';
       this.root.style.flexDirection = 'column';
+      // This would make even inline items appear like block items. That is why
+      // there will be a child div that will serve as the screen.
     }
 
     // clear the root element
     this.root.textContent = "";
+
+    const screen = document.createElement('div')
+    this.root.appendChild(screen)
+    screen.style.flex = '1';
 
     // Array that holds all the data
     this.data = [];
@@ -95,10 +101,10 @@ export class Sequence {
       }
 
       // clear the screen
-      this.root.textContent = "";
+      screen.textContent = "";
       stopwatch.start();
       // Display the plugin
-      const tmpPluginData = await plugin(this.root);
+      const tmpPluginData = await plugin(screen);
       const finalPluginData: IDataItem = {
         ...stopwatch.stop(),
         pluginIndex,

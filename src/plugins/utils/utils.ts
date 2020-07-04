@@ -1,1 +1,4 @@
-export * as m from './m'
+import cxs from 'cxs'
+import m from './m'
+
+export { cxs, m }

@@ -25,10 +25,13 @@ interface IInitConfig {
   use_webaudio?: boolean;
 }
 
-function init(config: IInitConfig): void {
+function init(config?: IInitConfig): void {
   if (jsPsychInitiated) {
     return;
   }
+
+  if (!config) { config = {}; }
+
   if (config.use_webaudio === undefined) {
     config.use_webaudio = true;
   }

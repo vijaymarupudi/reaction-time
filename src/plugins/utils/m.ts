@@ -1,10 +1,15 @@
-import m from 'mithril/hyperscript'
-import mount from 'mithril/mount'
-import redraw from 'mithril/redraw'
+import m from "mithril/hyperscript";
+import mount from "mithril/mount";
+import redraw from "mithril/redraw";
 
-function cleanup (el: HTMLElement): void {
-  mount(el, null)
-  redraw.sync()
+function cleanup(el: HTMLElement): void {
+  mount(el, null);
+  redraw.sync();
 }
 
-export { m, mount, redraw, cleanup }
+m.m = m;
+m.mount = mount;
+m.redraw = redraw;
+m.cleanup = cleanup;
+
+export default m;
