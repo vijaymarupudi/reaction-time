@@ -4,6 +4,7 @@
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "dependencies": {
+    "afterframe": "^1.0.1",
     "cxs": "^6.2.0",
     "mithril": "^2.0.4"
   },
