@@ -7,7 +7,7 @@ type IDataItem = IPluginData &
 type ITimelineIterableFunc = () => Iterable<IPluginInstance>;
 
 /**
- * Convertes an iterable in either an async or sync iterator
+ * Converts an iterable in either an async or sync iterator
  */
 function getIterator<YieldType, SendType>(
   iterable: Iterable<YieldType>
