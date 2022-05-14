@@ -1,35 +1,40 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+export interface IJsPsych {
+  plugins: { [key: string]: IJsPsychLegacyPlugin };
+  getDisplayElement(): Element;
+  getDisplayContainerElement(): Element
+  webaudio_context: unknown;
+  finishTrial(data: Record<string, unknown>): void;
+  pluginAPI: any;
+  DOM_container?: HTMLElement;
+  DOM_target?: HTMLElement;
+}
+
 export interface IJsPsychLegacyPlugin {
-  info: { parameters: { [key: string]: { default: unknown } } };
   trial: {
     (displayElement: HTMLElement, config: Record<string, unknown>): void;
   };
 }
 
+export interface IJsPsychLegacyPluginClass {
+  info: {
+    name: string,
+    parameters: { [key: string]: { default: unknown } }
+  };
+  new(jsPsych: IJsPsych): IJsPsychLegacyPlugin;
+}
+
 export interface IJsPsychPluginConfig {
-  type: string;
+  type: any;
+  css_classes?: Array<string>;
   [key: string]: unknown;
 }
 
-interface IPluginAPI {
-  createKeyboardEventListeners(el: HTMLDocument): void;
-  reset(el: HTMLDocument): void;
+export interface IPluginAPI {
+  createKeyboardEventListeners(el: Document): void;
+  reset(el: Document): void;
   audioContext: () => any;
+  setTimeout(handler: (...args: any[]) => void, timeout: number, ...args: any[]): void;
 }
 
-/* eslint-disable @typescript-eslint/no-namespace */
-interface IJsPsych {
-  plugins: { [key: string]: IJsPsychLegacyPlugin };
-  getDisplayElement(): Element;
-  webaudio_context: unknown;
-  finishTrial(data: Record<string, unknown>): void;
-  pluginAPI: IPluginAPI;
-}
-/* eslint-enable @typescript-eslint/no-namespace */
 
-declare global {
-  interface Window {
-    jsPsych: IJsPsych;
-  }
-}
-
-export const jsPsych: IJsPsych = window.jsPsych;

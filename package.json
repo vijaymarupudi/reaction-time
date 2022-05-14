@@ -1,11 +1,12 @@
 {
   "name": "@vijaymarupudi/reaction-time",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "author": "Vijay Marupudi <robot@vijaymarupudi.com>",
   "description": "A online psychology experiment library",
   "dependencies": {
     "afterframe": "^1.0.1",
     "cxs": "^6.2.0",
+    "jspsych": "^7.2.1",
     "mithril": "^2.0.4"
   },
   "devDependencies": {
@@ -20,12 +21,12 @@
     "core-js": "^3.16.1",
     "eslint": "^7.32.0",
     "rollup": "^2.23.0",
-    "rollup-plugin-postcss": "^3.1.8",
+    "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^6.1.0",
     "tachyons": "^4.12.0",
     "tslib": "^2.3.1",
-    "typedoc": "^0.17.8",
-    "typescript": "^3.9.7"
+    "typedoc": "^0.22.15",
+    "typescript": "^4.6.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
