@@ -6,6 +6,7 @@
   "dependencies": {
     "afterframe": "^1.0.1",
     "cxs": "^6.2.0",
+    "jspsych": "^7.2.1",
     "mithril": "^2.0.4"
   },
   "devDependencies": {

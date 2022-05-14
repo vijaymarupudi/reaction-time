@@ -13,16 +13,17 @@ function generate({ jsPsych = false, es = true, libraryDevelopment = false, core
   }
 
   return {
-    input: `./src/reaction-time${jsPsych ? "-jspsych" : ""}${core ? '-core' : ''}.ts`,
+    input: `./src/reaction-time${core ? '-core' : ''}.ts`,
     plugins: [
+      commonjs(),
+      resolve(),// for third party dependencies (like mithril)
       typescript({
         tsconfig: false,
         module: "es6",
-        target: "es2019",
-        esModuleInterop: true
+//        target: "es2019",
+//        esModuleInterop: true
       }),
-      resolve(), // for third party dependencies (like mithril)
-      commonjs(),
+      
       postcss(),
       ...(!es && !libraryDevelopment
         ? [
@@ -63,8 +64,9 @@ const DEV_MODE = process.env.NODE_ENV == "development";
 
 export default [
   generate({ jsPsych: true, es: true, libraryDevelopment: DEV_MODE }),
-  generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE }),
+  // generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE }),
   generate({ jsPsych: true, es: false, libraryDevelopment: DEV_MODE }),
-  generate({ jsPsych: false, es: false, libraryDevelopment: DEV_MODE }),
-  generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE, core: true }),
+  
+  // generate({ jsPsych: false, es: false, libraryDevelopment: DEV_MODE }),
+  // generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE, core: true }),
 ];
