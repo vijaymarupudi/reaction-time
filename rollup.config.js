@@ -6,11 +6,8 @@ import typescript from "@rollup/plugin-typescript";
 import process from "process";
 import postcss from 'rollup-plugin-postcss'
 
-function generate({ jsPsych = false, es = true, libraryDevelopment = false, core = false }) {
-  
-  if (core && jsPsych) {
-    throw "core and jsPsych cannot be on at the same time"
-  }
+function generate({ es = true, libraryDevelopment = false, core = false }) {
+
 
   return {
     input: `./src/reaction-time${core ? '-core' : ''}.ts`,
@@ -23,7 +20,7 @@ function generate({ jsPsych = false, es = true, libraryDevelopment = false, core
 //        target: "es2019",
 //        esModuleInterop: true
       }),
-      
+
       postcss(),
       ...(!es && !libraryDevelopment
         ? [
@@ -49,7 +46,7 @@ function generate({ jsPsych = false, es = true, libraryDevelopment = false, core
     ],
     output: [
       {
-        file: `./dist/bundles/reaction-time${jsPsych ? "-jspsych" : ""}${core ? '-core' : ''}.${
+        file: `./dist/bundles/reaction-time${core ? '-core' : ''}.${
           es ? "es" : "umd"
         }.js`,
         plugins: libraryDevelopment ? [] : [terser()],
@@ -63,10 +60,8 @@ function generate({ jsPsych = false, es = true, libraryDevelopment = false, core
 const DEV_MODE = process.env.NODE_ENV == "development";
 
 export default [
-  generate({ jsPsych: true, es: true, libraryDevelopment: DEV_MODE }),
-  // generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE }),
-  generate({ jsPsych: true, es: false, libraryDevelopment: DEV_MODE }),
-  
-  // generate({ jsPsych: false, es: false, libraryDevelopment: DEV_MODE }),
-  // generate({ jsPsych: false, es: true, libraryDevelopment: DEV_MODE, core: true }),
+  generate({ es: true, libraryDevelopment: DEV_MODE }),
+  generate({ es: false, libraryDevelopment: DEV_MODE }),
+  generate({ es: true, libraryDevelopment: DEV_MODE, core: true }),
+  generate({ es: false, libraryDevelopment: DEV_MODE, core: true })
 ];
