@@ -2,20 +2,28 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="jsPsych/jspsych.js"></script>
-    <script src="jsPsych/plugins/jspsych-html-button-response.js"></script>
-    <script src="dist/reaction-time.umd.js"></script>
-    <link rel="stylesheet" href="jsPsych/css/jspsych.css" />
+    <script src="node_modules/jspsych/dist/index.browser.min.js"></script>
+    <script src="node_modules/@jspsych/plugin-html-keyboard-response/dist/index.browser.min.js"></script>
+    <script src="dist/bundles/reaction-time.umd.js"></script>
+    <link rel="stylesheet" href="node_modules/jspsych/css/jspsych.css" />
   </head>
   <body>
     <script>
-      function* timelineGenerator(reactionTime) {
+      RT.plugins.jsPsych.init(initJsPsych());
+
+      const seq = new RT.Sequence({root: document.body});
+
+      function* timelineGenerator() {
+
+        yield RT.plugins.formPlugin({
+          form: '<div><label>Name: <input name="Wow"><button>Submit</button></div>'
+        })
 
         while (true) {
-          const result = yield ReactionTime.jsPsychPlugin({
-            type: "html-button-response",
-            stimulus: "<p>Click fast</p>",
-            choices: ["Here"]
+          const result = yield RT.plugins.jsPsych({
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "<p>Type fast</p>",
+            choices: ["K", "J"]
           });
 
           console.log(result); // data for that specific trial
@@ -25,18 +33,18 @@
             break;
           }
 
-          yield ReactionTime.jsPsychPlugin({
-            type: "html-button-response",
+          yield RT.plugins.jsPsych({
+            type: jsPsychHtmlKeyboardResponse,
             stimulus: "<p>Too slow! Your RT was " + result.rt.toString() + "</p>",
-            choices: ["Try again"]
+            choices: [" "]
           })
         }
 
-        reactionTime.displayData();
-
+        RT.utils.displayData(seq);
       }
 
-      ReactionTime.init(timelineGenerator);
+
+      seq.init(timelineGenerator);
     </script>
   </body>
 </html>
