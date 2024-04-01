@@ -17,7 +17,7 @@ function generate({ es = true, libraryDevelopment = false, core = false }) {
       typescript({
         tsconfig: false,
         module: "es6",
-//        target: "es2019",
+        target: "es2019",
 //        esModuleInterop: true
       }),
 
