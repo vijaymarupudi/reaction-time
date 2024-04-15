@@ -28,7 +28,9 @@ function dateToISO8601(date: Date) {
 export interface IStopwatchOutput {
   pluginDuration: number,
   pluginStartDateTime: string,
-  pluginStopDateTime: string
+  pluginStopDateTime: string,
+  pluginStartTime: number,
+  pluginStopTime: number
 }
 
 export class Stopwatch {
@@ -41,11 +43,14 @@ export class Stopwatch {
   }
 
   stop(): IStopwatchOutput {
-    const pluginDuration = performance.now() - this._startTimeStamp;
+    const now = performance.now()
+    const pluginDuration = now - this._startTimeStamp;
     return {
       pluginDuration,
       pluginStartDateTime: dateToISO8601(this._startDateTime),
-      pluginStopDateTime: dateToISO8601(new Date(Date.now()))
+      pluginStopDateTime: dateToISO8601(new Date(Date.now())),
+      pluginStartTime: this._startTimeStamp,
+      pluginStopTime: now
     };
   }
 }
