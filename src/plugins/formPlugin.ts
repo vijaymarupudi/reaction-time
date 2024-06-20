@@ -5,7 +5,7 @@ interface IFormPluginConfig {
   form: string
 }
 
-export const formPlugin = makePlugin<IFormPluginConfig>("formPlugin", (screen, config, callback) => {
+export const formPlugin = makePlugin<IFormPluginConfig>("RTFormPlugin", (screen, config, callback) => {
   const form = document.createElement("form");
   screen.appendChild(form);
   const div = document.createElement("div");
