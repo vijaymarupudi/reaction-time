@@ -1,5 +1,6 @@
 import { IPluginInstance, IPluginData } from "./types";
 import { Stopwatch, IStopwatchOutput } from "./Stopwatch";
+import { dataPlugin } from './plugins/dataPlugin'
 
 type IDataItem = IPluginData &
   IStopwatchOutput & { pluginIndex: number } & Record<string, unknown>;
@@ -59,7 +60,7 @@ export class Sequence {
       // caps 100vw to be the maximum width without scrollbars.
       // https://stackoverflow.com/questions/23367345/100vw-causing-horizontal-overflow-but-only-if-more-than-one
       this.root.style.width = "100vw";
-      this.root.style.maxWidth = '100%' 
+      this.root.style.maxWidth = '100%'
       this.root.style.height = '100vh';
       // This is being done to prevent scrollbars from appearing when the first element of the root element has a margin. This is due to margin collapsing
       //
@@ -89,8 +90,6 @@ export class Sequence {
     let previousPluginOutput: IDataItem['output'];
     // To time the plugins
     const stopwatch = new Stopwatch();
-    // To add to data
-    let pluginIndex = 0;
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -105,6 +104,7 @@ export class Sequence {
       stopwatch.start();
       // Display the plugin
       const tmpPluginData = await plugin(screen);
+      const pluginIndex = this.data.length == 0 ? 0 : this.data[this.data.length - 1].pluginIndex + 1
       const finalPluginData: IDataItem = {
         ...stopwatch.stop(),
         pluginIndex,
@@ -119,12 +119,19 @@ export class Sequence {
       }
 
       // wrapping up for next iteration
-      pluginIndex++;
       previousPluginOutput = finalPluginData.output;
     }
 
     // Sequence over, clean up target element
     this.root.removeAttribute("style");
     return this.data;
+  }
+
+  async pushData(item: any) {
+    const stop = new Stopwatch()
+    stop.start()
+    const pluginIndex = this.data.length == 0 ? 0 : this.data[this.data.length - 1].pluginIndex + 1
+    const data = await (dataPlugin({ data: item }))(null)
+    this.data.push({...stop.stop(), pluginIndex, ...data})
   }
 }
