@@ -104,7 +104,7 @@ export class Sequence {
       stopwatch.start();
       // Display the plugin
       const tmpPluginData = await plugin(screen);
-      const pluginIndex = this.data.length == 0 ? 0 : this.data[this.data.length - 1].pluginIndex + 1
+      const pluginIndex = this.data.length == 0 ? 0 : (this.data[this.data.length - 1].pluginIndex + 1)
       const finalPluginData: IDataItem = {
         ...stopwatch.stop(),
         pluginIndex,
@@ -130,7 +130,7 @@ export class Sequence {
   async pushData(item: any) {
     const stop = new Stopwatch()
     stop.start()
-    const pluginIndex = this.data.length == 0 ? 0 : this.data[this.data.length - 1].pluginIndex + 1
+    const pluginIndex = this.data.length == 0 ? 0 : (this.data[this.data.length - 1].pluginIndex + 1)
     const data = await (dataPlugin({ data: item }))(null)
     this.data.push({...stop.stop(), pluginIndex, ...data})
   }
